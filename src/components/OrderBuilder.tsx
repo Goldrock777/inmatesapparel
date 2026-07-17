@@ -256,8 +256,11 @@ export function OrderBuilder({
 
         {colors.map((color) => (
           <div key={color} className="mb-6 last:mb-0">
-            <div className="text-sm font-semibold text-heading mb-2">
-              {color}
+            <div className="flex items-center gap-2 mb-2">
+              <ColorSwatch color={color} />
+              <div className="text-sm font-semibold text-heading">
+                {color}
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
@@ -268,10 +271,7 @@ export function OrderBuilder({
                     <th className="py-2 pr-3 font-semibold text-right">
                       Unit Price
                     </th>
-                    <th className="py-2 pr-3 font-semibold text-right">
-                      Est. Annual Vol.
-                    </th>
-                    <th className="py-2 pr-0 font-semibold text-right w-28">
+                    <th className="py-2 pr-0 font-semibold text-right w-40">
                       Order Qty
                     </th>
                   </tr>
@@ -285,9 +285,14 @@ export function OrderBuilder({
                       return (
                         <tr
                           key={key}
-                          className="border-b border-line/60 hover:bg-panel-2/40"
+                          className={`border-b border-line/60 transition-colors ${
+                            qty > 0 ? 'bg-amber/5' : 'hover:bg-panel-2/40'
+                          }`}
                         >
                           <td className="py-2.5 pr-3 text-heading font-semibold">
+                            <span
+                              className={`inline-block w-1 h-4 rounded-full mr-2 align-middle ${qty > 0 ? 'bg-amber' : 'bg-transparent'}`}
+                            />
                             {item.size}
                           </td>
                           <td className="py-2.5 pr-3 font-mono text-sm text-body">
@@ -300,24 +305,10 @@ export function OrderBuilder({
                               ? formatCurrency(item.unitPrice)
                               : '—'}
                           </td>
-                          <td className="py-2.5 pr-3 text-right text-mist tabular-nums">
-                            {item.estimatedAnnualVolume != null
-                              ? formatNumber(item.estimatedAnnualVolume)
-                              : '—'}
-                          </td>
-                          <td className="py-2.5 pr-0 text-right">
-                            <input
-                              type="number"
-                              min={0}
-                              value={qty || ''}
-                              placeholder="0"
-                              onChange={(e) =>
-                                onQtyChange(
-                                  item,
-                                  Math.max(0, Number(e.target.value) || 0),
-                                )
-                              }
-                              className="w-24 bg-panel-2 border border-line rounded-lg px-2 py-1.5 text-right font-semibold tabular-nums text-heading focus:outline-none focus:border-amber"
+                          <td className="py-2.5 pr-0">
+                            <QtyStepper
+                              qty={qty}
+                              onChange={(next) => onQtyChange(item, next)}
                             />
                           </td>
                         </tr>
@@ -388,6 +379,59 @@ function StepLabel({ n, label }: { n: number; label: string }) {
         {n}
       </span>
       <span className="text-heading font-semibold">{label}</span>
+    </div>
+  )
+}
+
+const SWATCH_COLORS: Record<string, string> = {
+  White: '#f5f5f0',
+  'Sport Grey': '#9aa0a6',
+  'Dark Red': '#7c1f24',
+}
+
+function ColorSwatch({ color }: { color: string }) {
+  return (
+    <span
+      className="w-3 h-3 rounded-full border border-line-2 shrink-0"
+      style={{ backgroundColor: SWATCH_COLORS[color] ?? '#666' }}
+    />
+  )
+}
+
+function QtyStepper({
+  qty,
+  onChange,
+}: {
+  qty: number
+  onChange: (next: number) => void
+}) {
+  return (
+    <div className="flex items-center justify-end gap-1">
+      <button
+        type="button"
+        onClick={() => onChange(Math.max(0, qty - 1))}
+        disabled={qty === 0}
+        className="w-7 h-7 rounded-md border border-line text-mist hover:text-heading hover:border-line-2 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center shrink-0"
+        aria-label="Decrease quantity"
+      >
+        −
+      </button>
+      <input
+        type="number"
+        min={0}
+        value={qty || ''}
+        placeholder="0"
+        onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
+        className="w-16 bg-panel-2 border border-line rounded-lg px-2 py-1.5 text-center font-semibold tabular-nums text-heading focus:outline-none focus:border-amber"
+      />
+      <button
+        type="button"
+        onClick={() => onChange(qty + 1)}
+        className="w-7 h-7 rounded-md border border-line text-mist hover:text-heading hover:border-line-2 flex items-center justify-center shrink-0"
+        aria-label="Increase quantity"
+      >
+        +
+      </button>
     </div>
   )
 }

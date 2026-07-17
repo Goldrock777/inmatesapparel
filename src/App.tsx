@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Header, type TabKey } from './components/Header'
 import { Cover } from './components/Cover'
+import { SecurePortalLogin } from './components/SecurePortalLogin'
 import { OrderBuilder } from './components/OrderBuilder'
 import { SlipTab } from './components/SlipTab'
 import { FulfillmentSpec } from './components/FulfillmentSpec'
@@ -130,7 +131,7 @@ function App() {
       />
       <main
         className={
-          tab === 'cover'
+          tab === 'cover' || tab === 'login'
             ? ''
             : 'max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12'
         }
@@ -142,6 +143,12 @@ function App() {
             onManufacturingNoteChange={setManufacturingNote}
             leadTimeDays={meta.leadTimeDays}
             onNavigate={setTab}
+          />
+        )}
+        {tab === 'login' && (
+          <SecurePortalLogin
+            companyName={companyName}
+            onSignIn={() => setTab('builder')}
           />
         )}
         {tab === 'builder' && (
@@ -165,7 +172,7 @@ function App() {
         {tab === 'fulfillment' && <FulfillmentSpec />}
         {tab === 'pricing' && <PricingSheet companyName={companyName} />}
       </main>
-      {tab !== 'cover' && (
+      {tab !== 'cover' && tab !== 'login' && (
         <footer className="border-t border-line mt-16">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 text-xs text-dim font-tech tracking-wide">
             RSA 6000086831 · Product Distribution Centre · Ministry of
