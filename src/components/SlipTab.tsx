@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import type { CatalogItem } from '../data/catalog'
 import type { OrderMeta } from '../types'
 import { OrderSlip } from './OrderSlip'
-import { Kicker, Panel, SectionHeading } from './ui'
+import { Button, Eyebrow, Panel, SectionHeading } from './ui'
 import { exportNodeAsJpeg, exportNodeAsPdf } from '../lib/exportSlip'
 
 interface Line {
@@ -54,13 +54,9 @@ export function SlipTab({
           <p className="text-mist text-sm">
             Nothing to confirm yet — build an Order first.
           </p>
-          <button
-            type="button"
-            onClick={onBackToBuilder}
-            className="stamp text-xs bg-amber text-ink px-4 py-2.5 mt-4 hover:bg-amber/90"
-          >
-            ← Back to Order Builder
-          </button>
+          <div className="mt-4 flex justify-center">
+            <Button onClick={onBackToBuilder}>← Back to Order Builder</Button>
+          </div>
         </Panel>
       </div>
     )
@@ -74,52 +70,44 @@ export function SlipTab({
         description="Advance shipping notice and packing-slip contents, generated from the Order Builder. Confirms quantities, Contractor product code, and pricing within the required two Business Day window."
       />
 
-      <Panel className="p-5">
-        <Kicker>Lot Number</Kicker>
-        <input
-          value={meta.lotNumber}
-          onChange={(e) => onMetaChange({ lotNumber: e.target.value })}
-          className="w-full sm:w-64 mt-2 bg-panel-raised border border-line px-3 py-2 text-sm text-heading font-mono focus:outline-none focus:border-amber"
-        />
-        <Kicker>
-          <span className="mt-4 block">Notes / Special Instructions</span>
-        </Kicker>
-        <textarea
-          value={meta.notes}
-          onChange={(e) => onMetaChange({ notes: e.target.value })}
-          rows={2}
-          className="w-full mt-2 bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
-          placeholder="Optional — e.g. Partial Order / Backorder notice, courier details..."
-        />
+      <Panel className="p-5 space-y-4">
+        <div>
+          <Eyebrow>Lot Number</Eyebrow>
+          <input
+            value={meta.lotNumber}
+            onChange={(e) => onMetaChange({ lotNumber: e.target.value })}
+            className="w-full sm:w-64 mt-2 bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading font-tech focus:outline-none focus:border-amber"
+          />
+        </div>
+        <div>
+          <Eyebrow>Notes / Special Instructions</Eyebrow>
+          <textarea
+            value={meta.notes}
+            onChange={(e) => onMetaChange({ notes: e.target.value })}
+            rows={2}
+            className="w-full mt-2 bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+            placeholder="Optional — courier details, additional handling notes..."
+          />
+        </div>
       </Panel>
 
       <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => handleExport('pdf')}
-          disabled={exporting !== null}
-          className="stamp text-xs bg-amber text-ink px-4 py-2.5 hover:bg-amber/90 disabled:opacity-50"
-        >
+        <Button onClick={() => handleExport('pdf')} disabled={exporting !== null}>
           {exporting === 'pdf' ? 'Rendering…' : 'Download PDF'}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => handleExport('jpeg')}
           disabled={exporting !== null}
-          className="stamp text-xs border border-line-strong text-heading px-4 py-2.5 hover:border-amber disabled:opacity-50"
         >
           {exporting === 'jpeg' ? 'Rendering…' : 'Download JPEG'}
-        </button>
-        <button
-          type="button"
-          onClick={onBackToBuilder}
-          className="stamp text-xs border border-line text-mist px-4 py-2.5 hover:text-body"
-        >
+        </Button>
+        <Button variant="ghost" onClick={onBackToBuilder}>
           ← Edit Order
-        </button>
+        </Button>
       </div>
 
-      <div className="overflow-x-auto border border-line bg-[#0000]">
+      <div className="overflow-x-auto rounded-xl border border-line">
         <div className="py-8 px-4 min-w-[850px]">
           <OrderSlip
             ref={slipRef}

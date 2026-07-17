@@ -5,19 +5,22 @@ export function Panel({
   className = '',
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <div
-      className={`bracket-panel bg-panel/70 border border-line ${className}`}
-    >
+    <div className={`rounded-xl bg-panel border border-line ${className}`}>
       {children}
     </div>
   )
 }
 
-export function Kicker({ children }: PropsWithChildren) {
+export function Eyebrow({ children }: PropsWithChildren) {
+  return <div className="eyebrow">{children}</div>
+}
+
+export function SectionHead({ no, label }: { no: string; label: string }) {
   return (
-    <div className="stamp text-[11px] text-amber flex items-center gap-2">
-      <span className="w-4 h-px bg-amber inline-block" />
-      {children}
+    <div className="section-head">
+      <span className="no">{no}</span>
+      <span className="lbl">{label}</span>
+      <span className="rule" />
     </div>
   )
 }
@@ -27,22 +30,21 @@ export function SectionHeading({
   title,
   description,
 }: {
-  eyebrow: string
+  eyebrow?: string
   title: string
   description?: ReactNode
 }) {
   return (
-    <div className="mb-6">
-      <Kicker>{eyebrow}</Kicker>
-      <h2 className="font-display text-2xl md:text-3xl uppercase tracking-wide text-heading mt-2">
+    <div className="mb-9 max-w-2xl">
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight mt-2">
         {title}
       </h2>
       {description && (
-        <p className="text-body/80 mt-2 max-w-2xl text-sm leading-relaxed">
+        <p className="text-mist mt-3 text-[15px] leading-relaxed">
           {description}
         </p>
       )}
-      <div className="scan-divider mt-4" />
     </div>
   )
 }
@@ -57,12 +59,14 @@ export function StatTile({
   sub?: string
 }) {
   return (
-    <div className="bracket-panel bg-panel-raised/60 border border-line px-4 py-3">
-      <div className="stamp text-[10px] text-mist">{label}</div>
-      <div className="font-display text-xl md:text-2xl text-heading mt-1">
+    <div>
+      <div className="text-2xl md:text-3xl font-semibold text-heading tracking-tight">
         {value}
       </div>
-      {sub && <div className="text-xs text-mist mt-1">{sub}</div>}
+      <div className="font-tech text-[11px] text-dim uppercase tracking-wide mt-1">
+        {label}
+      </div>
+      {sub && <div className="text-sm text-body mt-0.5">{sub}</div>}
     </div>
   )
 }
@@ -70,18 +74,78 @@ export function StatTile({
 export function Tag({
   children,
   tone = 'default',
-}: PropsWithChildren<{ tone?: 'default' | 'red' | 'amber' | 'ok' }>) {
+}: PropsWithChildren<{ tone?: 'default' | 'red' | 'amber' | 'ok' | 'blue' }>) {
   const toneClass = {
-    default: 'border-line text-mist',
-    red: 'border-red-bright/50 text-red-bright',
-    amber: 'border-amber/50 text-amber',
-    ok: 'border-ok/50 text-ok',
+    default: 'bg-panel-2 text-mist border-line-2',
+    red: 'bg-red-bright/10 text-red-bright border-red-bright/30',
+    amber: 'bg-amber/10 text-amber border-amber/30',
+    ok: 'bg-green/10 text-green border-green/30',
+    blue: 'bg-blue/10 text-blue border-blue/30',
   }[tone]
   return (
     <span
-      className={`stamp text-[10px] border px-2 py-0.5 inline-block ${toneClass}`}
+      className={`font-tech text-[11px] font-semibold rounded-md border px-2.5 py-1 inline-flex items-center gap-1.5 tracking-wide ${toneClass}`}
     >
       {children}
     </span>
+  )
+}
+
+export function Pill({
+  children,
+  tone = 'ok',
+}: PropsWithChildren<{ tone?: 'ok' | 'low' | 'crit' | 'pend' }>) {
+  const toneClass = {
+    ok: 'bg-green/15 text-green',
+    low: 'bg-amber/15 text-amber',
+    crit: 'bg-red-bright/15 text-red-bright',
+    pend: 'bg-blue/15 text-blue',
+  }[tone]
+  return (
+    <span
+      className={`font-tech text-[10px] font-semibold px-2 py-0.5 rounded-md tracking-wide ${toneClass}`}
+    >
+      {children}
+    </span>
+  )
+}
+
+export function Button({
+  children,
+  onClick,
+  variant = 'primary',
+  disabled = false,
+  type = 'button',
+  href,
+}: PropsWithChildren<{
+  onClick?: () => void
+  variant?: 'primary' | 'secondary' | 'ghost'
+  disabled?: boolean
+  type?: 'button' | 'submit'
+  href?: string
+}>) {
+  const variantClass = {
+    primary: 'bg-amber text-amber-ink hover:bg-amber-2',
+    secondary:
+      'border border-line-2 text-heading hover:border-blue bg-transparent',
+    ghost: 'text-mist hover:text-body bg-transparent',
+  }[variant]
+  const classes = `inline-flex items-center gap-2 text-sm font-semibold rounded-lg px-5 py-2.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${variantClass}`
+  if (href) {
+    return (
+      <a href={href} className={classes}>
+        {children}
+      </a>
+    )
+  }
+  return (
+    <button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={classes}
+    >
+      {children}
+    </button>
   )
 }

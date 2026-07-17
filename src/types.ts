@@ -16,4 +16,6 @@ export interface OrderMeta {
   leadTimeDays: number
   expiryDate: string // ISO date
   notes: string
+  isPartialOrder: boolean
+  backorderProposedDate: string // ISO date
 }

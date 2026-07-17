@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Arial Narrow", "Oswald", Impact, "Segoe UI", sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --font-body: "Segoe UI", system-ui, sans-serif;
+  --font-disp: "Chakra Petch", "Oswald", "Arial Narrow", system-ui, sans-serif;
+  --font-tech: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+    Helvetica, Arial, sans-serif;
 
-  --color-ink: #0a0c0d;
-  --color-panel: #12171a;
-  --color-panel-raised: #171d21;
-  --color-line: #2a3338;
-  --color-line-strong: #465158;
-  --color-mist: #8a959c;
-  --color-paper: #e9ecdd;
-  --color-heading: #f2f4f5;
-  --color-body: #c7ced2;
+  --color-ink: #070b12;
+  --color-panel: #0c121d;
+  --color-panel-2: #0a0f18;
+  --color-line: #1a212e;
+  --color-line-2: #2a3550;
+  --color-line-3: #3d4a6b;
+  --color-heading: #ffffff;
+  --color-body: #e2e8f1;
+  --color-mist: #8a97ab;
+  --color-dim: #586477;
+  --color-faint: #3a4456;
 
-  --color-red: #9c1c22;
-  --color-red-bright: #c8272e;
-  --color-amber: #c99a3e;
-  --color-olive: #4a5240;
-  --color-ok: #4f8a5b;
+  --color-amber: #cda349;
+  --color-amber-2: #e0b860;
+  --color-amber-ink: #0a0f18;
+  --color-blue: #6fa8dc;
+  --color-green: #5fbf86;
+  --color-red-bright: #d97066;
 }
 
 html {
@@ -31,72 +35,60 @@ body {
   background: var(--color-ink);
   color: var(--color-body);
   font-family: var(--font-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
   background-image:
     linear-gradient(var(--color-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background-size: 64px 64px;
   background-position: -1px -1px;
   background-attachment: fixed;
   background-color: var(--color-ink);
-}
-
-body::before {
-  content: "";
 }
 
 #root {
   min-height: 100vh;
 }
 
-.font-display {
-  font-family: var(--font-display);
+.font-tech {
+  font-family: var(--font-tech);
 }
-.font-mono {
-  font-family: var(--font-mono);
-}
-
-/* corner-bracket tactical panel frame */
-.bracket-panel {
-  position: relative;
-}
-.bracket-panel::before,
-.bracket-panel::after,
-.bracket-panel > .bracket-tl,
-.bracket-panel > .bracket-br {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  pointer-events: none;
-}
-.bracket-panel::before {
-  top: -1px;
-  left: -1px;
-  border-top: 2px solid var(--color-amber);
-  border-left: 2px solid var(--color-amber);
-}
-.bracket-panel::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 2px solid var(--color-amber);
-  border-right: 2px solid var(--color-amber);
+.font-disp {
+  font-family: var(--font-disp);
 }
 
-.stamp {
-  font-family: var(--font-mono);
+.eyebrow {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--color-amber);
 }
 
-.scan-divider {
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.section-head .no {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  color: var(--color-faint);
+  letter-spacing: 0.1em;
+}
+.section-head .lbl {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.section-head .rule {
+  flex: 1;
   height: 1px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-line-strong) 0,
-    var(--color-line-strong) 6px,
-    transparent 6px,
-    transparent 12px
-  );
+  background: var(--color-line);
 }
 
 @media print {

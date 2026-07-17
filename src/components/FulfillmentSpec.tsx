@@ -5,7 +5,7 @@ import {
   LEAD_TIME_SCORE,
   RETURN_REQUIREMENTS,
 } from '../data/contract'
-import { Kicker, Panel, SectionHeading, Tag } from './ui'
+import { Eyebrow, Panel, SectionHeading, Tag } from './ui'
 
 export function FulfillmentSpec() {
   return (
@@ -17,7 +17,7 @@ export function FulfillmentSpec() {
       />
 
       <Panel className="p-5">
-        <Kicker>Delivery Location</Kicker>
+        <Eyebrow>Delivery Location</Eyebrow>
         <div className="grid sm:grid-cols-2 gap-4 mt-3 text-sm">
           <div>
             <div className="text-heading font-mono">
@@ -37,7 +37,7 @@ export function FulfillmentSpec() {
       </Panel>
 
       <div>
-        <Kicker>SA §5.2 - Packaging &amp; Delivery Requirements</Kicker>
+        <Eyebrow>SA §5.2 - Packaging &amp; Delivery Requirements</Eyebrow>
         <div className="grid md:grid-cols-2 gap-3 mt-4">
           {DELIVERY_REQUIREMENTS.map((req) => (
             <Panel key={req.label} className="p-4">
@@ -56,11 +56,11 @@ export function FulfillmentSpec() {
       </div>
 
       <div>
-        <Kicker>SA §7.3.1 / RSA §7.3 - Lead Time Scoring</Kicker>
+        <Eyebrow>SA §7.3.1 / RSA §7.3 - Lead Time Scoring</Eyebrow>
         <Panel className="p-5 mt-4">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-mist stamp text-[10px] border-b border-line">
+              <tr className="text-left text-mist font-tech text-[11px] uppercase tracking-wide border-b border-line">
                 <th className="py-2 font-normal">Proposed Lead Time</th>
                 <th className="py-2 font-normal text-right">
                   Evaluation Points
@@ -86,7 +86,7 @@ export function FulfillmentSpec() {
       </div>
 
       <div>
-        <Kicker>SA §4.7 - Partial Order &amp; Backorder Resolution</Kicker>
+        <Eyebrow>SA §4.7 - Partial Order &amp; Backorder Resolution</Eyebrow>
         <div className="grid md:grid-cols-2 gap-3 mt-4">
           {BACKORDER_PATHS.map((path) => (
             <Panel key={path.code} className="p-4">
@@ -113,7 +113,7 @@ export function FulfillmentSpec() {
 
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <Kicker>SA §6 - Returns (Contractor Error)</Kicker>
+          <Eyebrow>SA §6 - Returns (Contractor Error)</Eyebrow>
           <Panel className="p-4 mt-4">
             <ul className="space-y-2 text-xs text-body/80">
               {RETURN_REQUIREMENTS.contractorError.map((item) => (
@@ -126,7 +126,7 @@ export function FulfillmentSpec() {
           </Panel>
         </div>
         <div>
-          <Kicker>SA §6 - Returns (Province Error)</Kicker>
+          <Eyebrow>SA §6 - Returns (Province Error)</Eyebrow>
           <Panel className="p-4 mt-4">
             <ul className="space-y-2 text-xs text-body/80">
               {RETURN_REQUIREMENTS.provinceError.map((item) => (
@@ -141,7 +141,7 @@ export function FulfillmentSpec() {
       </div>
 
       <div>
-        <Kicker>SA §8.4-8.5 - Recall Procedure</Kicker>
+        <Eyebrow>SA §8.4-8.5 - Recall Procedure</Eyebrow>
         <Panel className="p-5 mt-4">
           <ol className="space-y-2 text-sm text-body/90 list-decimal list-inside">
             <li>

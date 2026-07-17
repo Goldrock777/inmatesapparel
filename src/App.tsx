@@ -33,11 +33,14 @@ function defaultMeta(): OrderMeta {
     leadTimeDays,
     expiryDate: expiry.toISOString().slice(0, 10),
     notes: '',
+    isPartialOrder: false,
+    backorderProposedDate: '',
   }
 }
 
 interface PersistedState {
   companyName: string
+  manufacturingNote: string
   cart: [string, number][]
   meta: OrderMeta
 }
@@ -56,6 +59,9 @@ function App() {
   const persisted = useMemo(loadPersisted, [])
   const [tab, setTab] = useState<TabKey>('cover')
   const [companyName, setCompanyName] = useState(persisted?.companyName ?? '')
+  const [manufacturingNote, setManufacturingNote] = useState(
+    persisted?.manufacturingNote ?? '',
+  )
   const [cart, setCart] = useState<Map<string, number>>(
     () => new Map(persisted?.cart ?? []),
   )
@@ -66,11 +72,12 @@ function App() {
   useEffect(() => {
     const state: PersistedState = {
       companyName,
+      manufacturingNote,
       cart: Array.from(cart.entries()),
       meta,
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  }, [companyName, cart, meta])
+  }, [companyName, manufacturingNote, cart, meta])
 
   function handleQtyChange(item: CatalogItem, qty: number) {
     setCart((prev) => {
@@ -93,6 +100,17 @@ function App() {
     setTab('slip')
   }
 
+  function handleAnchor(id: string) {
+    setTab('cover')
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document
+          .getElementById(id)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    })
+  }
+
   const lines = useMemo(
     () =>
       CATALOG.filter((item) => (cart.get(itemKey(item)) ?? 0) > 0).map(
@@ -106,12 +124,25 @@ function App() {
       <Header
         active={tab}
         onChange={setTab}
+        onAnchor={handleAnchor}
         companyName={companyName}
         onCompanyNameChange={setCompanyName}
       />
-      <main className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12">
+      <main
+        className={
+          tab === 'cover'
+            ? ''
+            : 'max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12'
+        }
+      >
         {tab === 'cover' && (
-          <Cover companyName={companyName} onNavigate={setTab} />
+          <Cover
+            companyName={companyName}
+            manufacturingNote={manufacturingNote}
+            onManufacturingNoteChange={setManufacturingNote}
+            leadTimeDays={meta.leadTimeDays}
+            onNavigate={setTab}
+          />
         )}
         {tab === 'builder' && (
           <OrderBuilder
@@ -134,14 +165,14 @@ function App() {
         {tab === 'fulfillment' && <FulfillmentSpec />}
         {tab === 'pricing' && <PricingSheet companyName={companyName} />}
       </main>
-      <footer className="border-t border-line mt-16">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 text-[10px] text-mist stamp flex flex-wrap justify-between gap-2">
-          <span>
-            RSA 6000086831 // Product Distribution Centre // BC Corrections
-          </span>
-          <span>Proposal exhibit — not a live production procurement system</span>
-        </div>
-      </footer>
+      {tab !== 'cover' && (
+        <footer className="border-t border-line mt-16">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 text-xs text-dim font-tech tracking-wide">
+            RSA 6000086831 · Product Distribution Centre · Ministry of
+            Citizens&apos; Services
+          </div>
+        </footer>
+      )}
     </div>
   )
 }
