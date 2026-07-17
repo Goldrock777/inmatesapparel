@@ -5,7 +5,7 @@ import { formatCurrency, formatNumber } from '../lib/format'
 import { addBusinessDays, formatDate } from '../lib/businessDays'
 import { asnStatus, checkExpiryCompliance } from '../lib/compliance'
 import { itemKey } from '../lib/ids'
-import { Button, Eyebrow, Panel, SectionHeading, Tag } from './ui'
+import { Button, Panel, SectionHeading, Tag } from './ui'
 import type { OrderMeta } from '../types'
 
 const CATEGORIES: GoodCategory[] = ['T-Shirt', 'Sweatshirt', 'Sweatpants']
@@ -24,6 +24,7 @@ export function OrderBuilder({
   onGenerate: () => void
 }) {
   const [activeCategory, setActiveCategory] = useState<GoodCategory>('T-Shirt')
+  const [showAdvanced, setShowAdvanced] = useState(false)
 
   const lines = useMemo(
     () =>
@@ -54,22 +55,11 @@ export function OrderBuilder({
       <SectionHeading
         eyebrow="SA §4 - Orders"
         title="Order Builder"
-        description="Select Goods and quantities. No minimum order quantity applies to any Order per the Contractor's Response. Line items missing an assigned PDC code are still orderable — code assignment is pending on the Province's side."
+        description="Two steps: fill in the Order details, then pick Goods and quantities. No minimum order quantity applies to any Order."
       />
 
       <Panel className="p-5">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <Eyebrow>Mandatory Order Fields — SA §4.6</Eyebrow>
-          <Tag tone={asn.tone === 'ok' ? 'ok' : asn.tone === 'warning' ? 'amber' : 'red'}>
-            Confirm &amp; ship by {formatDate(asn.deadline)}
-            {asn.tone !== 'ok' &&
-              (asn.daysLeft < 0
-                ? ' — overdue'
-                : asn.daysLeft === 0
-                  ? ' — due today'
-                  : ' — 1 day left')}
-          </Tag>
-        </div>
+        <StepLabel n={1} label="Order details" />
         <div className="grid md:grid-cols-2 gap-4 mt-4">
           <div>
             <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
@@ -118,81 +108,120 @@ export function OrderBuilder({
               className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
           </div>
-          <div>
-            <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
-              Goods Expiry Date (SA §4.2)
-            </label>
-            <input
-              type="date"
-              value={meta.expiryDate}
-              onChange={(e) => onMetaChange({ expiryDate: e.target.value })}
-              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
-            />
-            {!expiry.compliant && meta.expiryDate && (
-              <div className="text-xs text-red-bright mt-1">
-                Below 1 year from Delivery Date — requires Province sign-off
-                in advance.
-              </div>
-            )}
-          </div>
-          <div className="md:col-span-2 flex items-center gap-3">
-            <input
-              id="alt-delivery"
-              type="checkbox"
-              checked={meta.deliverToAlternate}
-              onChange={(e) =>
-                onMetaChange({ deliverToAlternate: e.target.checked })
-              }
-              className="accent-[var(--color-amber)]"
-            />
-            <label htmlFor="alt-delivery" className="text-sm text-body">
-              Deliver to alternate location (SA §5.3 - occasional drop
-              shipment)
-            </label>
-          </div>
-          {meta.deliverToAlternate && (
-            <div className="md:col-span-2">
-              <input
-                value={meta.alternateLocation}
-                onChange={(e) =>
-                  onMetaChange({ alternateLocation: e.target.value })
-                }
-                placeholder="Alternate delivery address"
-                className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
-              />
-            </div>
-          )}
+        </div>
 
-          <div className="md:col-span-2 flex items-center gap-3">
-            <input
-              id="partial-order"
-              type="checkbox"
-              checked={meta.isPartialOrder}
-              onChange={(e) =>
-                onMetaChange({ isPartialOrder: e.target.checked })
+        <div className="flex items-center gap-3 mt-4 text-xs text-mist">
+          <span>
+            Order must be confirmed &amp; shipped by{' '}
+            <span
+              className={
+                asn.tone === 'ok'
+                  ? 'text-green font-semibold'
+                  : asn.tone === 'warning'
+                    ? 'text-amber font-semibold'
+                    : 'text-red-bright font-semibold'
               }
-              className="accent-[var(--color-amber)]"
-            />
-            <label htmlFor="partial-order" className="text-sm text-body">
-              This is a Partial Order / Backorder (SA §4.7)
-            </label>
-          </div>
-          {meta.isPartialOrder && (
+            >
+              {formatDate(asn.deadline)}
+            </span>{' '}
+            (2 Business Days, SA §4.3)
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowAdvanced((v) => !v)}
+          className="text-sm text-mist hover:text-heading mt-5 flex items-center gap-1.5"
+        >
+          <span
+            className={`inline-block transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
+          >
+            ›
+          </span>
+          Advanced options — expiry date, alternate delivery, backorder
+        </button>
+
+        {showAdvanced && (
+          <div className="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-line">
             <div>
               <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
-                Proposed Backorder Delivery Date
+                Goods Expiry Date (SA §4.2)
               </label>
               <input
                 type="date"
-                value={meta.backorderProposedDate}
-                onChange={(e) =>
-                  onMetaChange({ backorderProposedDate: e.target.value })
-                }
+                value={meta.expiryDate}
+                onChange={(e) => onMetaChange({ expiryDate: e.target.value })}
                 className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
               />
+              {!expiry.compliant && meta.expiryDate && (
+                <div className="text-xs text-red-bright mt-1">
+                  Below 1 year from Delivery Date — requires Province
+                  sign-off in advance.
+                </div>
+              )}
             </div>
-          )}
-        </div>
+            <div />
+
+            <div className="md:col-span-2 flex items-center gap-3">
+              <input
+                id="alt-delivery"
+                type="checkbox"
+                checked={meta.deliverToAlternate}
+                onChange={(e) =>
+                  onMetaChange({ deliverToAlternate: e.target.checked })
+                }
+                className="accent-[var(--color-amber)]"
+              />
+              <label htmlFor="alt-delivery" className="text-sm text-body">
+                Deliver to alternate location (SA §5.3 - occasional drop
+                shipment)
+              </label>
+            </div>
+            {meta.deliverToAlternate && (
+              <div className="md:col-span-2">
+                <input
+                  value={meta.alternateLocation}
+                  onChange={(e) =>
+                    onMetaChange({ alternateLocation: e.target.value })
+                  }
+                  placeholder="Alternate delivery address"
+                  className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+                />
+              </div>
+            )}
+
+            <div className="md:col-span-2 flex items-center gap-3">
+              <input
+                id="partial-order"
+                type="checkbox"
+                checked={meta.isPartialOrder}
+                onChange={(e) =>
+                  onMetaChange({ isPartialOrder: e.target.checked })
+                }
+                className="accent-[var(--color-amber)]"
+              />
+              <label htmlFor="partial-order" className="text-sm text-body">
+                This is a Partial Order / Backorder (SA §4.7)
+              </label>
+            </div>
+            {meta.isPartialOrder && (
+              <div>
+                <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
+                  Proposed Backorder Delivery Date
+                </label>
+                <input
+                  type="date"
+                  value={meta.backorderProposedDate}
+                  onChange={(e) =>
+                    onMetaChange({ backorderProposedDate: e.target.value })
+                  }
+                  className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="grid sm:grid-cols-3 gap-3 mt-5 text-xs">
           {ORDER_REQUIREMENTS.map((req) => (
             <div
@@ -207,7 +236,8 @@ export function OrderBuilder({
       </Panel>
 
       <Panel className="p-5">
-        <div className="flex flex-wrap gap-2 mb-5">
+        <StepLabel n={2} label="Select Goods & quantities" />
+        <div className="flex flex-wrap gap-2 mt-4 mb-5">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -347,6 +377,17 @@ export function OrderBuilder({
           </Button>
         </div>
       </Panel>
+    </div>
+  )
+}
+
+function StepLabel({ n, label }: { n: number; label: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="w-6 h-6 rounded-full bg-amber text-amber-ink text-xs font-bold flex items-center justify-center shrink-0">
+        {n}
+      </span>
+      <span className="text-heading font-semibold">{label}</span>
     </div>
   )
 }

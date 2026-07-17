@@ -24,8 +24,11 @@ export function Cover({
       <section className="border-b border-line pt-16 pb-14 overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 md:px-6 grid lg:grid-cols-[1.08fr_0.92fr] gap-12 items-center">
           <div>
-            <Eyebrow>ApparelIQ · Single-source apparel program</Eyebrow>
-            <h1 className="font-disp uppercase text-3xl sm:text-4xl md:text-[2.6rem] font-bold text-heading leading-[1.1] mt-5">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Eyebrow>ApparelIQ · Single-source apparel program</Eyebrow>
+              <Tag tone="blue">Working prototype</Tag>
+            </div>
+            <h1 className="font-disp text-3xl sm:text-4xl md:text-[2.6rem] font-bold text-heading leading-[1.15] mt-5">
               <span className="text-amber">
                 {companyName || 'ApparelIQ'}
               </span>{' '}
@@ -33,10 +36,11 @@ export function Cover({
               inmate apparel.
             </h1>
             <p className="text-mist text-[16px] leading-relaxed mt-5 max-w-lg">
-              End-to-end Order intake, delivery-compliance tracking, and
-              auto-generated Order Confirmations built directly against the
-              Standing Arrangement for RSA {CONTRACT.rsaNumber}. Operational
-              today — not a roadmap.
+              A working prototype showing exactly how Order intake,
+              delivery-compliance tracking, and Order Confirmations would
+              run against the Standing Arrangement for RSA{' '}
+              {CONTRACT.rsaNumber}. Every screen below is real and
+              interactive.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Button onClick={() => onNavigate('builder')}>
@@ -79,7 +83,7 @@ export function Cover({
         <section id="commitment" className="py-20 border-b border-line">
           <SectionHead no="01" label="Understanding & Commitment" />
           <div className="max-w-2xl mb-11">
-            <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight">
+            <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading leading-tight">
               We built the compliance system before submitting the Response.
             </h2>
             <p className="text-mist mt-3 text-[15px] leading-relaxed">
@@ -120,12 +124,12 @@ export function Cover({
         <section id="capabilities" className="py-20 border-b border-line">
           <SectionHead no="02" label="Capabilities" />
           <div className="max-w-2xl mb-9">
-            <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight">
+            <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading leading-tight">
               Mapped directly to the Standing Arrangement
             </h2>
             <p className="text-mist mt-3 text-[15px] leading-relaxed">
-              Every capability below is delivered today, in this platform —
-              not on a roadmap.
+              Every capability below is built and working in this prototype,
+              not just described on paper.
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl border border-line">
@@ -158,7 +162,7 @@ export function Cover({
                       {row.capability}
                     </td>
                     <td className="py-4 px-5 align-top">
-                      <Tag tone="ok">Operational</Tag>
+                      <Tag tone="ok">Working</Tag>
                     </td>
                   </tr>
                 ))}
@@ -171,7 +175,7 @@ export function Cover({
         <section id="manufacturing" className="py-20 border-b border-line">
           <SectionHead no="03" label="Manufacturing & Quality" />
           <div className="max-w-2xl mb-9">
-            <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight">
+            <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading leading-tight">
               Goods built to the Province&apos;s specification
             </h2>
             <p className="text-mist mt-3 text-[15px] leading-relaxed">
@@ -251,7 +255,7 @@ export function Cover({
         <section id="service-levels" className="py-20 border-b border-line">
           <SectionHead no="05" label="Service Levels" />
           <div className="max-w-2xl mb-9">
-            <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight">
+            <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading leading-tight">
               Process commitments enforced by the platform
             </h2>
           </div>
@@ -305,7 +309,7 @@ export function Cover({
         <section className="py-20">
           <SectionHead no="06" label="Goods Coverage" />
           <div className="max-w-2xl mb-9">
-            <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading leading-tight">
+            <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading leading-tight">
               Full catalogue, {skuCount} SKUs
             </h2>
           </div>
@@ -335,7 +339,7 @@ export function Cover({
       {/* CTA */}
       <section className="py-20 text-center border-t border-line">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <h2 className="font-disp uppercase text-2xl md:text-3xl font-bold text-heading">
+          <h2 className="font-disp text-2xl md:text-3xl font-bold text-heading">
             Review the system, end to end
           </h2>
           <p className="text-mist mt-3 max-w-lg mx-auto">
