@@ -1,6 +1,12 @@
 import { Button } from './ui'
 
-export type TabKey = 'cover' | 'builder' | 'slip' | 'fulfillment' | 'pricing'
+export type TabKey =
+  | 'cover'
+  | 'login'
+  | 'builder'
+  | 'slip'
+  | 'fulfillment'
+  | 'pricing'
 
 const ANCHORS: { id: string; label: string }[] = [
   { id: 'commitment', label: 'Approach' },
@@ -31,6 +37,7 @@ export function Header({
   onCompanyNameChange: (value: string) => void
 }) {
   const onCover = active === 'cover'
+  const onLogin = active === 'login'
 
   return (
     <header className="sticky top-0 z-30 bg-ink/85 backdrop-blur border-b border-line">
@@ -63,44 +70,48 @@ export function Header({
             </div>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-1">
-            {onCover
-              ? ANCHORS.map((a) => (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={() => onAnchor(a.id)}
-                    className="text-sm text-mist hover:text-heading px-3 py-2 rounded-md hover:bg-white/[0.04] transition-colors"
-                  >
-                    {a.label}
-                  </button>
-                ))
-              : TOOL_TABS.map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => onChange(tab.key)}
-                    className={`text-sm px-3 py-2 rounded-md transition-colors ${
-                      active === tab.key
-                        ? 'text-heading bg-white/[0.06]'
-                        : 'text-mist hover:text-heading hover:bg-white/[0.04]'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-          </nav>
+          {!onLogin && (
+            <nav className="hidden lg:flex items-center gap-1">
+              {onCover
+                ? ANCHORS.map((a) => (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => onAnchor(a.id)}
+                      className="text-sm text-mist hover:text-heading px-3 py-2 rounded-md hover:bg-white/[0.04] transition-colors"
+                    >
+                      {a.label}
+                    </button>
+                  ))
+                : TOOL_TABS.map((tab) => (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => onChange(tab.key)}
+                      className={`text-sm px-3 py-2 rounded-md transition-colors ${
+                        active === tab.key
+                          ? 'text-heading bg-white/[0.06]'
+                          : 'text-mist hover:text-heading hover:bg-white/[0.04]'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+            </nav>
+          )}
 
-          <div className="flex items-center gap-3">
-            <input
-              value={companyName}
-              onChange={(e) => onCompanyNameChange(e.target.value)}
-              className="hidden xl:block bg-panel-2 border border-line-2 rounded-lg px-3 py-2 text-sm text-heading w-52 focus:outline-none focus:border-amber"
-              placeholder="Your company legal name"
-              aria-label="Contractor legal name"
-            />
-            <Button onClick={() => onChange('builder')}>Start an order</Button>
-          </div>
+          {!onLogin && (
+            <div className="flex items-center gap-3">
+              <input
+                value={companyName}
+                onChange={(e) => onCompanyNameChange(e.target.value)}
+                className="hidden xl:block bg-panel-2 border border-line-2 rounded-lg px-3 py-2 text-sm text-heading w-52 focus:outline-none focus:border-amber"
+                placeholder="Your company legal name"
+                aria-label="Contractor legal name"
+              />
+              <Button onClick={() => onChange('login')}>Start an order</Button>
+            </div>
+          )}
         </div>
       </div>
     </header>

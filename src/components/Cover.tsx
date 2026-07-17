@@ -43,7 +43,7 @@ export function Cover({
               interactive.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
-              <Button onClick={() => onNavigate('builder')}>
+              <Button onClick={() => onNavigate('login')}>
                 Start an order →
               </Button>
               <Button
@@ -242,7 +242,7 @@ export function Cover({
               </p>
               <Button
                 variant="secondary"
-                onClick={() => onNavigate('builder')}
+                onClick={() => onNavigate('login')}
               >
                 Open the Order Builder →
               </Button>
@@ -347,7 +347,7 @@ export function Cover({
             generate a real Order Confirmation.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
-            <Button onClick={() => onNavigate('builder')}>
+            <Button onClick={() => onNavigate('login')}>
               Order Builder →
             </Button>
             <Button variant="secondary" onClick={() => onNavigate('pricing')}>
@@ -397,7 +397,7 @@ export function Cover({
               </div>
               <div className="text-sm text-mist space-y-1.5">
                 <button
-                  onClick={() => onNavigate('builder')}
+                  onClick={() => onNavigate('login')}
                   className="block hover:text-heading"
                 >
                   Order Builder

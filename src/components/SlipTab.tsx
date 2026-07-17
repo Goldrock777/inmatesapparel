@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import type { CatalogItem } from '../data/catalog'
 import type { OrderMeta } from '../types'
 import { OrderSlip } from './OrderSlip'
-import { Button, Eyebrow, Panel, SectionHeading } from './ui'
+import { Button, DownloadIcon, Eyebrow, Panel, SectionHeading } from './ui'
 import { exportNodeAsJpeg, exportNodeAsPdf } from '../lib/exportSlip'
 
 interface Line {
@@ -93,6 +93,7 @@ export function SlipTab({
 
       <div className="flex flex-wrap gap-3">
         <Button onClick={() => handleExport('pdf')} disabled={exporting !== null}>
+          <DownloadIcon />
           {exporting === 'pdf' ? 'Rendering…' : 'Download PDF'}
         </Button>
         <Button
@@ -100,6 +101,7 @@ export function SlipTab({
           onClick={() => handleExport('jpeg')}
           disabled={exporting !== null}
         >
+          <DownloadIcon />
           {exporting === 'jpeg' ? 'Rendering…' : 'Download JPEG'}
         </Button>
         <Button variant="ghost" onClick={onBackToBuilder}>

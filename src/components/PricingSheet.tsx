@@ -3,7 +3,7 @@ import { CATALOG, type GoodCategory } from '../data/catalog'
 import { CONTRACT } from '../data/contract'
 import { formatCurrency, formatNumber } from '../lib/format'
 import { exportNodeAsJpeg, exportNodeAsPdf } from '../lib/exportSlip'
-import { Button, Eyebrow, Panel, SectionHeading } from './ui'
+import { Button, DownloadIcon, Eyebrow, Panel, SectionHeading } from './ui'
 
 const CATEGORIES: GoodCategory[] = ['T-Shirt', 'Sweatshirt', 'Sweatpants']
 
@@ -59,6 +59,7 @@ export function PricingSheet({ companyName }: { companyName: string }) {
 
       <div className="flex flex-wrap gap-3">
         <Button onClick={() => handleExport('pdf')} disabled={exporting !== null}>
+          <DownloadIcon />
           {exporting === 'pdf' ? 'Rendering…' : 'Download PDF'}
         </Button>
         <Button
@@ -66,6 +67,7 @@ export function PricingSheet({ companyName }: { companyName: string }) {
           onClick={() => handleExport('jpeg')}
           disabled={exporting !== null}
         >
+          <DownloadIcon />
           {exporting === 'jpeg' ? 'Rendering…' : 'Download JPEG'}
         </Button>
       </div>
