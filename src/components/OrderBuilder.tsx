@@ -3,8 +3,9 @@ import { CATALOG, type CatalogItem, type GoodCategory } from '../data/catalog'
 import { CONTRACT, ORDER_REQUIREMENTS } from '../data/contract'
 import { formatCurrency, formatNumber } from '../lib/format'
 import { addBusinessDays, formatDate } from '../lib/businessDays'
+import { asnStatus, checkExpiryCompliance } from '../lib/compliance'
 import { itemKey } from '../lib/ids'
-import { Kicker, Panel, SectionHeading, Tag } from './ui'
+import { Button, Eyebrow, Panel, SectionHeading, Tag } from './ui'
 import type { OrderMeta } from '../types'
 
 const CATEGORIES: GoodCategory[] = ['T-Shirt', 'Sweatshirt', 'Sweatpants']
@@ -37,21 +38,13 @@ export function OrderBuilder({
     (sum, l) => sum + l.qty * (l.item.unitPrice ?? 0),
     0,
   )
-  const deliveryDate = addBusinessDays(
-    new Date(meta.orderDate || Date.now()),
-    meta.leadTimeDays,
+  const orderDate = new Date(meta.orderDate || Date.now())
+  const deliveryDate = addBusinessDays(orderDate, meta.leadTimeDays)
+  const asn = asnStatus(orderDate)
+  const expiry = checkExpiryCompliance(
+    deliveryDate,
+    meta.expiryDate ? new Date(meta.expiryDate) : null,
   )
-
-  const expiryWarning = useMemo(() => {
-    if (!meta.expiryDate) return null
-    const minExpiry = new Date(deliveryDate)
-    minExpiry.setFullYear(minExpiry.getFullYear() + 1)
-    const expiry = new Date(meta.expiryDate)
-    if (expiry < minExpiry) {
-      return 'Below 1 year from Delivery Date — requires Province sign-off in advance per SA §4.2.'
-    }
-    return null
-  }, [meta.expiryDate, deliveryDate])
 
   const visibleItems = CATALOG.filter((i) => i.category === activeCategory)
   const colors = Array.from(new Set(visibleItems.map((i) => i.color)))
@@ -65,7 +58,18 @@ export function OrderBuilder({
       />
 
       <Panel className="p-5">
-        <Kicker>Mandatory Order Fields — SA §4.6</Kicker>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <Eyebrow>Mandatory Order Fields — SA §4.6</Eyebrow>
+          <Tag tone={asn.tone === 'ok' ? 'ok' : asn.tone === 'warning' ? 'amber' : 'red'}>
+            Confirm &amp; ship by {formatDate(asn.deadline)}
+            {asn.tone !== 'ok' &&
+              (asn.daysLeft < 0
+                ? ' — overdue'
+                : asn.daysLeft === 0
+                  ? ' — due today'
+                  : ' — 1 day left')}
+          </Tag>
+        </div>
         <div className="grid md:grid-cols-2 gap-4 mt-4">
           <div>
             <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
@@ -75,7 +79,7 @@ export function OrderBuilder({
               value={meta.issuerName}
               onChange={(e) => onMetaChange({ issuerName: e.target.value })}
               placeholder="e.g. Kendra Green"
-              className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
           </div>
           <div>
@@ -86,7 +90,7 @@ export function OrderBuilder({
               value={meta.issuerTitle}
               onChange={(e) => onMetaChange({ issuerTitle: e.target.value })}
               placeholder="e.g. Procurement and Contract Officer"
-              className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
           </div>
           <div>
@@ -97,7 +101,7 @@ export function OrderBuilder({
               type="date"
               value={meta.orderDate}
               onChange={(e) => onMetaChange({ orderDate: e.target.value })}
-              className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
           </div>
           <div>
@@ -111,7 +115,7 @@ export function OrderBuilder({
               onChange={(e) =>
                 onMetaChange({ leadTimeDays: Number(e.target.value) || 0 })
               }
-              className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
           </div>
           <div>
@@ -122,11 +126,12 @@ export function OrderBuilder({
               type="date"
               value={meta.expiryDate}
               onChange={(e) => onMetaChange({ expiryDate: e.target.value })}
-              className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
             />
-            {expiryWarning && (
+            {!expiry.compliant && meta.expiryDate && (
               <div className="text-xs text-red-bright mt-1">
-                {expiryWarning}
+                Below 1 year from Delivery Date — requires Province sign-off
+                in advance.
               </div>
             )}
           </div>
@@ -153,7 +158,37 @@ export function OrderBuilder({
                   onMetaChange({ alternateLocation: e.target.value })
                 }
                 placeholder="Alternate delivery address"
-                className="w-full bg-panel-raised border border-line px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+                className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
+              />
+            </div>
+          )}
+
+          <div className="md:col-span-2 flex items-center gap-3">
+            <input
+              id="partial-order"
+              type="checkbox"
+              checked={meta.isPartialOrder}
+              onChange={(e) =>
+                onMetaChange({ isPartialOrder: e.target.checked })
+              }
+              className="accent-[var(--color-amber)]"
+            />
+            <label htmlFor="partial-order" className="text-sm text-body">
+              This is a Partial Order / Backorder (SA §4.7)
+            </label>
+          </div>
+          {meta.isPartialOrder && (
+            <div>
+              <label className="text-xs font-semibold text-mist uppercase tracking-wide block mb-1">
+                Proposed Backorder Delivery Date
+              </label>
+              <input
+                type="date"
+                value={meta.backorderProposedDate}
+                onChange={(e) =>
+                  onMetaChange({ backorderProposedDate: e.target.value })
+                }
+                className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
               />
             </div>
           )}
@@ -162,7 +197,7 @@ export function OrderBuilder({
           {ORDER_REQUIREMENTS.map((req) => (
             <div
               key={req}
-              className="border border-line px-3 py-2 text-mist flex gap-2"
+              className="border border-line rounded-lg px-3 py-2 text-mist flex gap-2"
             >
               <span className="text-amber">✓</span>
               {req}
@@ -178,10 +213,10 @@ export function OrderBuilder({
               key={cat}
               type="button"
               onClick={() => setActiveCategory(cat)}
-              className={`text-sm font-semibold uppercase tracking-wide px-3 py-1.5 border transition-colors ${
+              className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
                 activeCategory === cat
-                  ? 'border-amber text-heading bg-panel-raised'
-                  : 'border-line text-mist hover:text-body'
+                  ? 'bg-panel-2 text-heading'
+                  : 'text-mist hover:text-body'
               }`}
             >
               {cat}
@@ -191,7 +226,7 @@ export function OrderBuilder({
 
         {colors.map((color) => (
           <div key={color} className="mb-6 last:mb-0">
-            <div className="text-sm font-semibold text-heading uppercase tracking-wide mb-2">
+            <div className="text-sm font-semibold text-heading mb-2">
               {color}
             </div>
             <div className="overflow-x-auto">
@@ -220,7 +255,7 @@ export function OrderBuilder({
                       return (
                         <tr
                           key={key}
-                          className="border-b border-line/60 hover:bg-panel-raised/40"
+                          className="border-b border-line/60 hover:bg-panel-2/40"
                         >
                           <td className="py-2.5 pr-3 text-heading font-semibold">
                             {item.size}
@@ -252,7 +287,7 @@ export function OrderBuilder({
                                   Math.max(0, Number(e.target.value) || 0),
                                 )
                               }
-                              className="w-24 bg-panel-raised border border-line px-2 py-1.5 text-right font-semibold tabular-nums text-heading focus:outline-none focus:border-amber"
+                              className="w-24 bg-panel-2 border border-line rounded-lg px-2 py-1.5 text-right font-semibold tabular-nums text-heading focus:outline-none focus:border-amber"
                             />
                           </td>
                         </tr>
@@ -265,7 +300,7 @@ export function OrderBuilder({
         ))}
       </Panel>
 
-      <Panel className="p-5 sticky bottom-4">
+      <Panel className="p-5 sticky bottom-4 shadow-2xl shadow-black/40">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-wrap gap-6">
             <div>
@@ -307,14 +342,9 @@ export function OrderBuilder({
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            disabled={lines.length === 0}
-            onClick={onGenerate}
-            className="text-sm font-semibold uppercase tracking-wide bg-amber text-ink px-5 py-3 hover:bg-amber/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
+          <Button disabled={lines.length === 0} onClick={onGenerate}>
             Generate Order Confirmation →
-          </button>
+          </Button>
         </div>
       </Panel>
     </div>

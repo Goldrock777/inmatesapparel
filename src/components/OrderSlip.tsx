@@ -3,6 +3,7 @@ import type { CatalogItem } from '../data/catalog'
 import { CONTRACT } from '../data/contract'
 import { formatCurrency, formatNumber } from '../lib/format'
 import { addBusinessDays, formatDate } from '../lib/businessDays'
+import { asnDeadline, checkExpiryCompliance } from '../lib/compliance'
 import { contractorSku } from '../lib/ids'
 import type { OrderMeta } from '../types'
 
@@ -27,6 +28,11 @@ export const OrderSlip = forwardRef<
   const deliverTo = meta.deliverToAlternate
     ? meta.alternateLocation || 'Alternate location (TBD)'
     : CONTRACT.deliveryLocation
+  const deadline = asnDeadline(new Date(meta.orderDate || Date.now()))
+  const expiry = checkExpiryCompliance(
+    deliveryDate,
+    meta.expiryDate ? new Date(meta.expiryDate) : null,
+  )
 
   return (
     <div
@@ -75,7 +81,43 @@ export const OrderSlip = forwardRef<
             }
             mono
           />
+          <Field
+            label="Confirm & Ship By (SA §4.3)"
+            value={formatDate(deadline)}
+            mono
+          />
         </div>
+
+        {meta.isPartialOrder && (
+          <div className="mb-6 border border-[#c99a3e] bg-[#fbf4e4] p-4">
+            <div className="uppercase tracking-wide font-semibold text-[10px] text-[#7a5c1e] mb-1">
+              Backorder Notice — SA §4.7
+            </div>
+            <p className="text-[11px] text-[#5c4a1e] leading-relaxed">
+              This Order includes a Partial Order / Backorder. Proposed
+              Backorder Delivery Date:{' '}
+              <strong>
+                {meta.backorderProposedDate
+                  ? formatDate(new Date(meta.backorderProposedDate))
+                  : 'to be confirmed'}
+              </strong>
+              . The Province may cancel, accept the Partial Order only, or
+              accept both on the terms set out in SA §4.7.
+            </p>
+          </div>
+        )}
+
+        {!expiry.compliant && meta.expiryDate && (
+          <div className="mb-6 border border-[#c8272e] bg-[#fbe9e9] p-4">
+            <div className="uppercase tracking-wide font-semibold text-[10px] text-[#7a1a1e] mb-1">
+              Expiry Compliance Warning — SA §4.2
+            </div>
+            <p className="text-[11px] text-[#5c1416] leading-relaxed">
+              Goods Expiry Date is below one (1) year from the Delivery Date.
+              Requires Province sign-off in writing in advance of shipment.
+            </p>
+          </div>
+        )}
 
         <table className="w-full text-[11px] border-collapse">
           <thead>

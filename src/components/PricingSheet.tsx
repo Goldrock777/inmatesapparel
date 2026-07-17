@@ -3,7 +3,7 @@ import { CATALOG, type GoodCategory } from '../data/catalog'
 import { CONTRACT } from '../data/contract'
 import { formatCurrency, formatNumber } from '../lib/format'
 import { exportNodeAsJpeg, exportNodeAsPdf } from '../lib/exportSlip'
-import { Kicker, Panel, SectionHeading } from './ui'
+import { Button, Eyebrow, Panel, SectionHeading } from './ui'
 
 const CATEGORIES: GoodCategory[] = ['T-Shirt', 'Sweatshirt', 'Sweatpants']
 
@@ -58,22 +58,16 @@ export function PricingSheet({ companyName }: { companyName: string }) {
       />
 
       <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => handleExport('pdf')}
-          disabled={exporting !== null}
-          className="stamp text-xs bg-amber text-ink px-4 py-2.5 hover:bg-amber/90 disabled:opacity-50"
-        >
+        <Button onClick={() => handleExport('pdf')} disabled={exporting !== null}>
           {exporting === 'pdf' ? 'Rendering…' : 'Download PDF'}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => handleExport('jpeg')}
           disabled={exporting !== null}
-          className="stamp text-xs border border-line-strong text-heading px-4 py-2.5 hover:border-amber disabled:opacity-50"
         >
           {exporting === 'jpeg' ? 'Rendering…' : 'Download JPEG'}
-        </button>
+        </Button>
       </div>
 
       <div className="overflow-x-auto border border-line">
@@ -197,8 +191,8 @@ export function PricingSheet({ companyName }: { companyName: string }) {
       </div>
 
       <Panel className="p-5">
-        <Kicker>Pricing Coverage Note</Kicker>
-        <p className="text-xs text-body/80 mt-2 leading-relaxed">
+        <Eyebrow>Pricing Coverage Note</Eyebrow>
+        <p className="text-xs text-mist mt-2 leading-relaxed">
           {pricedButCodePending.length} of {CATALOG.length} catalog
           combinations above (e.g. White 4XL/5XL) are priced but do not yet
           carry an assigned PDC product code or historical purchase volume —
