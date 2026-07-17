@@ -19,7 +19,7 @@ function todayIso(): string {
 
 function defaultMeta(): OrderMeta {
   const orderDate = todayIso()
-  const leadTimeDays = 10
+  const leadTimeDays = 3
   const deliveryDate = addBusinessDays(new Date(orderDate), leadTimeDays)
   const expiry = new Date(deliveryDate)
   expiry.setFullYear(expiry.getFullYear() + 2)
