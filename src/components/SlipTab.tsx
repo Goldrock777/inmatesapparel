@@ -52,7 +52,7 @@ export function SlipTab({
         />
         <Panel className="p-8 text-center">
           <p className="text-mist text-sm">
-            Nothing to confirm yet — build an Order first.
+            Nothing to confirm yet. Build an Order first.
           </p>
           <div className="mt-4 flex justify-center">
             <Button onClick={onBackToBuilder}>← Back to Order Builder</Button>
@@ -86,7 +86,7 @@ export function SlipTab({
             onChange={(e) => onMetaChange({ notes: e.target.value })}
             rows={2}
             className="w-full mt-2 bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading focus:outline-none focus:border-amber"
-            placeholder="Optional — courier details, additional handling notes..."
+            placeholder="Optional: courier details, additional handling notes..."
           />
         </div>
       </Panel>

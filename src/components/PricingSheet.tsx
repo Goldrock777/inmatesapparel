@@ -139,7 +139,7 @@ export function PricingSheet({ companyName }: { companyName: string }) {
                           <td className="py-1.5 pr-2 text-right font-mono">
                             {item.estimatedAnnualVolume != null
                               ? formatNumber(item.estimatedAnnualVolume)
-                              : '—'}
+                              : '-'}
                           </td>
                           <td className="py-1.5 pr-2 text-right font-mono">
                             {formatCurrency(item.unitPrice ?? 0)}
@@ -197,7 +197,7 @@ export function PricingSheet({ companyName }: { companyName: string }) {
         <p className="text-xs text-mist mt-2 leading-relaxed">
           {pricedButCodePending.length} of {CATALOG.length} catalog
           combinations above (e.g. White 4XL/5XL) are priced but do not yet
-          carry an assigned PDC product code or historical purchase volume —
+          carry an assigned PDC product code or historical purchase volume,
           consistent with the Procurement Decision Note, which only issues
           codes against combinations with purchase history. These lines
           remain orderable in the Order Builder and will receive a PDC code

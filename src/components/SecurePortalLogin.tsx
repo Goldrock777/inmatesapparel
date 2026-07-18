@@ -51,7 +51,7 @@ export function SecurePortalLogin({
               className="w-full bg-panel-2 border border-line rounded-lg px-3 py-2 text-sm text-heading font-tech mb-2 focus:outline-none focus:border-amber"
             />
             <p className="text-xs text-dim mb-5">
-              Demo credentials pre-filled for this walkthrough — a live
+              Demo credentials pre-filled for this walkthrough. A live
               deployment would authenticate real PDC staff logins.
             </p>
 

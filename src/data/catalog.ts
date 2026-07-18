@@ -1,5 +1,5 @@
 // PDC product codes sourced from the Procurement Decision Note (May 27, 2026).
-// Combinations without an assigned PDC code are flagged rather than invented —
+// Combinations without an assigned PDC code are flagged rather than invented:
 // PDC has historically only issued codes for SKUs with purchase history.
 
 export type GoodCategory = 'T-Shirt' | 'Sweatshirt' | 'Sweatpants'
