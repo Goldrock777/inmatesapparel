@@ -31,9 +31,8 @@ export function Cover({
             <h1 className="font-disp text-3xl sm:text-4xl md:text-[2.6rem] font-bold text-heading leading-[1.15] mt-5">
               <span className="text-amber">
                 {companyName || 'ApparelIQ'}
-              </span>{' '}
-              — a managed order fulfillment platform for BC Corrections
-              inmate apparel.
+              </span>
+              {': a managed order fulfillment platform for BC Corrections inmate apparel.'}
             </h1>
             <p className="text-mist text-[16px] leading-relaxed mt-5 max-w-lg">
               A working prototype showing exactly how Order intake,
@@ -92,7 +91,7 @@ export function Cover({
               window to confirm and ship every Order, and specific packaging
               and packing-slip requirements that can trigger a rejection at
               the Contractor&apos;s expense. Rather than describe a process
-              on paper, we built the tooling that enforces it — this
+              on paper, we built the tooling that enforces it. This
               platform is that tooling, live.
             </p>
           </div>
@@ -105,7 +104,7 @@ export function Cover({
             <Phase
               tag="Within 2 Bus. Days"
               title="Order confirmed"
-              body="Advance Shipping Notice and Order Confirmation issued automatically per SA §4.3 — quantities, Contractor product code, and pricing confirmed."
+              body="Advance Shipping Notice and Order Confirmation issued automatically per SA §4.3: quantities, Contractor product code, and pricing confirmed."
             />
             <Phase
               tag={`Within ${leadTimeDays} Bus. Days`}
@@ -180,7 +179,7 @@ export function Cover({
             </h2>
             <p className="text-mist mt-3 text-[15px] leading-relaxed">
               Every SKU meets the fabric, sizing, and design requirements in
-              Appendix B — including safety-driven details the specification
+              Appendix B, including safety-driven details the specification
               calls for.
             </p>
           </div>
@@ -343,7 +342,7 @@ export function Cover({
             Review the system, end to end
           </h2>
           <p className="text-mist mt-3 max-w-lg mx-auto">
-            Every tab is live and fully interactive — build an Order and
+            Every tab is live and fully interactive: build an Order and
             generate a real Order Confirmation.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
@@ -382,7 +381,7 @@ export function Cover({
                 </div>
                 <div>
                   <span className="text-heading font-medium">Authority</span>{' '}
-                  Product Distribution Centre — Ministry of Citizens&apos;
+                  Product Distribution Centre, Ministry of Citizens&apos;
                   Services
                 </div>
                 <div>

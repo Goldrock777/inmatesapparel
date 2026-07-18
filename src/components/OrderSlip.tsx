@@ -69,7 +69,7 @@ export const OrderSlip = forwardRef<
           />
           <Field
             label="Issued By (PDC)"
-            value={`${meta.issuerName || '—'}${meta.issuerTitle ? `, ${meta.issuerTitle}` : ''}`}
+            value={`${meta.issuerName || '-'}${meta.issuerTitle ? `, ${meta.issuerTitle}` : ''}`}
           />
           <Field label="Deliver To" value={deliverTo} />
           <Field
@@ -77,7 +77,7 @@ export const OrderSlip = forwardRef<
             value={
               meta.expiryDate
                 ? formatDate(new Date(meta.expiryDate))
-                : '—'
+                : '-'
             }
             mono
           />
@@ -91,7 +91,7 @@ export const OrderSlip = forwardRef<
         {meta.isPartialOrder && (
           <div className="mb-6 border border-[#c99a3e] bg-[#fbf4e4] p-4">
             <div className="uppercase tracking-wide font-semibold text-[10px] text-[#7a5c1e] mb-1">
-              Backorder Notice — SA §4.7
+              Backorder Notice (SA §4.7)
             </div>
             <p className="text-[11px] text-[#5c4a1e] leading-relaxed">
               This Order includes a Partial Order / Backorder. Proposed
@@ -110,7 +110,7 @@ export const OrderSlip = forwardRef<
         {!expiry.compliant && meta.expiryDate && (
           <div className="mb-6 border border-[#c8272e] bg-[#fbe9e9] p-4">
             <div className="uppercase tracking-wide font-semibold text-[10px] text-[#7a1a1e] mb-1">
-              Expiry Compliance Warning — SA §4.2
+              Expiry Compliance Warning (SA §4.2)
             </div>
             <p className="text-[11px] text-[#5c1416] leading-relaxed">
               Goods Expiry Date is below one (1) year from the Delivery Date.
@@ -153,7 +153,7 @@ export const OrderSlip = forwardRef<
                 <td className="py-2 pr-2 text-right font-mono">
                   {line.item.unitPrice != null
                     ? formatCurrency(line.item.unitPrice)
-                    : '—'}
+                    : '-'}
                 </td>
                 <td className="py-2 pr-0 text-right font-mono">
                   {formatCurrency(line.qty * (line.item.unitPrice ?? 0))}
@@ -197,7 +197,7 @@ export const OrderSlip = forwardRef<
 
         <div className="mt-6 border border-[#d8dbdd] p-4">
           <div className="uppercase tracking-wide font-semibold text-[10px] text-[#14181a] mb-2">
-            Packing Slip Contents — SA §5.2(h) Confirmation
+            Packing Slip Contents: SA §5.2(h) Confirmation
           </div>
           <div className="grid grid-cols-2 gap-y-1 gap-x-4 text-[10px] text-[#3a4245]">
             {[
@@ -257,7 +257,7 @@ function Field({
         {label}
       </div>
       <div className={mono ? 'font-mono text-[13px]' : 'text-[13px]'}>
-        {value || '—'}
+        {value || '-'}
       </div>
     </div>
   )

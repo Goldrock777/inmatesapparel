@@ -138,7 +138,7 @@ export function OrderBuilder({
           >
             ›
           </span>
-          Advanced options — expiry date, alternate delivery, backorder
+          Advanced options: expiry date, alternate delivery, backorder
         </button>
 
         {showAdvanced && (
@@ -155,7 +155,7 @@ export function OrderBuilder({
               />
               {!expiry.compliant && meta.expiryDate && (
                 <div className="text-xs text-red-bright mt-1">
-                  Below 1 year from Delivery Date — requires Province
+                  Below 1 year from Delivery Date, requires Province
                   sign-off in advance.
                 </div>
               )}
@@ -303,7 +303,7 @@ export function OrderBuilder({
                           <td className="py-2.5 pr-3 text-right text-body tabular-nums">
                             {item.unitPrice != null
                               ? formatCurrency(item.unitPrice)
-                              : '—'}
+                              : '-'}
                           </td>
                           <td className="py-2.5 pr-0">
                             <QtyStepper
